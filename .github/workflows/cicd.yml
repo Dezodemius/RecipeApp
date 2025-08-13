@@ -19,7 +19,7 @@ jobs:
       sha: ${{ steps.get_sha.outputs.sha }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Get commit SHA
         id: get_sha
@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [checkout_code, generate_version]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -71,7 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build_app
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -90,7 +90,7 @@ jobs:
       packages: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
