@@ -1,24 +1,43 @@
-﻿using RecipeApp.Model;
+﻿using System.Threading.Tasks;
+using RecipeApp.Model;
 
 namespace RecipeApp.Components;
 
+/// <summary>
+/// Компонента для создания рецепта.
+/// </summary>
 public partial class RecipeCreate
 {
-  private readonly Recipe _recipe = new()
+  #region Поля и свойства
+
+  private readonly Recipe _recipe = new ()
   {
     Ingredients = []
   };
 
+  #endregion
+
+  #region Методы
+
+  /// <summary>
+  /// Сохранить рецепт.
+  /// </summary>
+  /// <returns>Задача выполнения.</returns>
   private Task Save()
   {
-    RecipeService.AddRecipe(_recipe);
-    NavigationManager.NavigateTo("/");
+    this.RecipeService.AddRecipe(this._recipe);
+    this.NavigationManager.NavigateTo("/");
 
     return Task.CompletedTask;
   }
 
+  /// <summary>
+  /// Отменить создание рецепта.
+  /// </summary>
   private void Cancel()
   {
-    NavigationManager.NavigateTo("/");
+    this.NavigationManager.NavigateTo("/");
   }
+
+  #endregion
 }

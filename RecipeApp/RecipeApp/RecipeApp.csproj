@@ -4,9 +4,23 @@
         <TargetFramework>net8.0</TargetFramework>
         <RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
         <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <Configurations>Debug;Release;StyleCheck</Configurations>
+        <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)' == 'StyleCheck'">
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <WarningsAsErrors>SA1***</WarningsAsErrors>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)' != 'StyleCheck'">
+        <EnableNETAnalyzers>false</EnableNETAnalyzers>
+    </PropertyGroup>
+
 
     <ItemGroup>
       <Content Include="..\.dockerignore">
@@ -23,6 +37,10 @@
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.16" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
       <PackageReference Include="PSC.Blazor.Components.MarkdownEditor" Version="8.0.8" />
+      <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
     </ItemGroup>
 
     <ItemGroup>

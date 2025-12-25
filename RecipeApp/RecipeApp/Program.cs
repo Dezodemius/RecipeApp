@@ -1,12 +1,23 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using RecipeApp.Components;
 using RecipeApp.Services;
 
 namespace RecipeApp;
 
-public class Program
+/// <summary>
+/// Программа.
+/// </summary>
+public static class Program
 {
+  /// <summary>
+  /// Точка входа в программу.
+  /// </summary>
+  /// <param name="args">Аргументы командной строки.</param>
   public static void Main(string[] args)
   {
     var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +26,8 @@ public class Program
       .AddInteractiveServerComponents();
     builder.Services.AddDbContext<RecipesDbContext>(options =>
       options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-    builder.Services.Configure<FormOptions>(options => {
+    builder.Services.Configure<FormOptions>(options =>
+    {
       options.MultipartBodyLengthLimit = 10 * 1024 * 1024;
     });
     builder.Services.AddRazorPages();

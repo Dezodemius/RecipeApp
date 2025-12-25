@@ -1,0 +1,25 @@
+﻿# .editorconfig
+root = true
+
+[*.cs]
+
+# SA1633: File must have a header
+dotnet_diagnostic.SA1633.severity = none
+# SA1200: Using directives must be placed inside a namespace declaration
+dotnet_diagnostic.SA1200.severity = none
+# CA2007: Do not directly await a Task without calling ConfigureAwait
+dotnet_diagnostic.CA2007.severity = none
+# CA1062: Validate arguments of public methods (e.g., check for null)
+dotnet_diagnostic.CA1062.severity = none
+# SA1010: Opening square brackets must be spaced correctly
+dotnet_diagnostic.SA1010.severity = none
+# SA1413: Use trailing comma in multi-line initializers
+dotnet_diagnostic.SA1413.severity = none
+# SA1309: Field names must not begin with an underscore
+dotnet_diagnostic.SA1309.severity = none
+# SA1623: The property's documentation summary text must begin with a proper descriptive phrase
+dotnet_diagnostic.SA1623.severity = none
+# SA1503: Braces must not be omitted
+dotnet_diagnostic.SA1503.severity = none
+# SA1124: Do not use regions (#region and #endregion)
+dotnet_diagnostic.SA1124.severity = none

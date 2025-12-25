@@ -11,18 +11,18 @@
         </button>
     </div>
 
-    @if (_recipe == null)
+    @if (recipe == null)
     {
         <p>Загрузка...</p>
     }
     else
     {
         <div class="text-center">
-            <h2 class="fw-bold mb-3">@_recipe.Title</h2>
+            <h2 class="fw-bold mb-3">@recipe.Title</h2>
 
-            @if (!string.IsNullOrEmpty(_recipe.ImagePath))
+            @if (!string.IsNullOrEmpty(recipe.ImagePath))
             {
-                <img src="@_recipe.ImagePath" class="recipe-image" />
+                <img src="@recipe.ImagePath" class="recipe-image" />
             }
 
             <div class="d-flex justify-content-start gap-2 mb-4">
@@ -37,7 +37,7 @@
             </div>
 
             <article class="mb-4 text-start">
-                <div>@((MarkupString)_recipe.ContentHtml)</div>
+                <div>@((MarkupString)recipe.ContentHtml)</div>
             </article>
 
             <div class="table-responsive">
@@ -50,7 +50,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach (var ing in _recipe.Ingredients)
+                    @foreach (var ing in recipe.Ingredients)
                     {
                         <tr>
                             <td>
