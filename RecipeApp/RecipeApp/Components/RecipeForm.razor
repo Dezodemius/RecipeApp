@@ -1,4 +1,5 @@
-﻿@inject IWebHostEnvironment Env
+﻿@using Microsoft.AspNetCore.Hosting
+@inject IWebHostEnvironment Env
 
 <EditForm Model="Recipe"
           OnValidSubmit="Save"
@@ -14,9 +15,9 @@
 
             <div class="image-upload-wrapper mb-4">
                 <label for="imageInput" class="image-upload-label">
-                    @if (!string.IsNullOrEmpty(_imagePreviewUrl))
+                    @if (!string.IsNullOrEmpty(imagePreviewUrl))
                     {
-                        <img src="@_imagePreviewUrl" class="recipe-image-preview"/>
+                        <img src="@imagePreviewUrl" class="recipe-image-preview"/>
                     }
                     else
                     {
@@ -33,7 +34,7 @@
             <div class="mb-3">
                 <h3>Рецепт</h3>
                 <MarkdownEditor
-                    @bind-Value="_markdownValue"/>
+                    @bind-Value="markdownValue"/>
             </div>
 
             <h5>Ингредиенты</h5>
