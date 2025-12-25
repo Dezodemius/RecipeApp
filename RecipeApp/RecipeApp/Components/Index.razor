@@ -13,11 +13,11 @@
         <button class="btn btn-primary add-button mt-2" @onclick="AddRecipe">Добавить блюдо</button>
     </div>
 
-@if (_recipes == null)
+@if (recipes == null)
 {
     <p>Загрузка...</p>
 }
-else if (!_recipes.Any())
+else if (!recipes.Any())
 {
     <p>Рецептов пока нет.</p>
 }
@@ -45,18 +45,18 @@ else
     {
         <nav>
             <ul class="pagination">
-                <li class="page-item @(_currentPage == 1 ? "disabled" : "")">
-                    <button class="page-link" @onclick="() => GoToPage(_currentPage - 1)">«</button>
+                <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                    <button class="page-link" @onclick="() => GoToPage(currentPage - 1)">«</button>
                 </li>
                 @for (int i = 1; i <= TotalPages; i++)
                 {
                     var pageNumber = i; // Локальная переменная для замыкания
-                    <li class="page-item @(pageNumber == _currentPage ? "active" : "")">
+                    <li class="page-item @(pageNumber == currentPage ? "active" : "")">
                         <button class="page-link" @onclick="() => GoToPage(pageNumber)">@pageNumber</button>
                     </li>
                 }
-                <li class="page-item @(_currentPage == TotalPages ? "disabled" : "")">
-                    <button class="page-link" @onclick="() => GoToPage(_currentPage + 1)">»</button>
+                <li class="page-item @(currentPage == TotalPages ? "disabled" : "")">
+                    <button class="page-link" @onclick="() => GoToPage(currentPage + 1)">»</button>
                 </li>
             </ul>
         </nav>

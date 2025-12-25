@@ -1,0 +1,35 @@
+﻿name: Build
+
+on:
+  workflow_call:
+    inputs:
+      solution-path:
+        required: true
+        type: string
+jobs:
+  build:
+    name: StyleCheck Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore ${{ inputs.solution-path }}
+
+      - name: Build in StyleCheck configuration
+        run: |
+          set -o pipefail
+          dotnet build ${{ inputs.solution-path }} --configuration StyleCheck --no-restore --no-incremental -warnaserror | tee build.log
+      - name: Upload build log
+        if: failure() || always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stylecop-build-log
+          path: build.log
