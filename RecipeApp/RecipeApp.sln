@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipeApp", "RecipeApp\RecipeApp.csproj", "{81F7161A-A4D1-456F-ABA2-0FC277F693B1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipesService", "RecipesService\RecipesService.csproj", "{63F0FD2D-A22D-4880-AA5C-F24343F64736}"
+EndProject
 
 EndProject
 Global
@@ -17,5 +19,11 @@ Global
 		{81F7161A-A4D1-456F-ABA2-0FC277F693B1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{81F7161A-A4D1-456F-ABA2-0FC277F693B1}.StyleCheck|Any CPU.ActiveCfg = StyleCheck|Any CPU
 		{81F7161A-A4D1-456F-ABA2-0FC277F693B1}.StyleCheck|Any CPU.Build.0 = StyleCheck|Any CPU
+		{63F0FD2D-A22D-4880-AA5C-F24343F64736}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63F0FD2D-A22D-4880-AA5C-F24343F64736}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63F0FD2D-A22D-4880-AA5C-F24343F64736}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63F0FD2D-A22D-4880-AA5C-F24343F64736}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63F0FD2D-A22D-4880-AA5C-F24343F64736}.StyleCheck|Any CPU.ActiveCfg = Debug|Any CPU
+		{63F0FD2D-A22D-4880-AA5C-F24343F64736}.StyleCheck|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 EndGlobal
