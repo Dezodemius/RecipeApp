@@ -1,13 +1,14 @@
+using System.Threading.Tasks;
 using Grpc.Core;
-using RecipesService;
+using Microsoft.Extensions.Logging;
 
-namespace RecipesService.Services;
+namespace RecipesService.Api.Services;
 
-public class GreeterService : Greeter.GreeterBase
+public class RecipeService : RecipeGrpcService.RecipeGrpcServiceBase
 {
-    private readonly ILogger<GreeterService> _logger;
+    private readonly ILogger<RecipeService> _logger;
 
-    public GreeterService(ILogger<GreeterService> logger)
+    public RecipeService(ILogger<RecipeService> logger)
     {
         _logger = logger;
     }

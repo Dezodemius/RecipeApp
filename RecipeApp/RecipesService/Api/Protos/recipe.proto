@@ -2,20 +2,16 @@ syntax = "proto3";
 
 option csharp_namespace = "RecipesService";
 
-package greet;
+package recipe;
 
-// The greeting service definition.
-service Greeter {
-  // Sends a greeting
+service RecipeGrpcService {
   rpc SayHello (HelloRequest) returns (HelloReply);
 }
 
-// The request message containing the user's name.
 message HelloRequest {
   string name = 1;
 }
 
-// The response message containing the greetings.
 message HelloReply {
   string message = 1;
 }
