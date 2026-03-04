@@ -52,7 +52,7 @@ public class UpdateHandler
 
         // 2. Отправляем кнопку Mini App
         // ВАЖНО: Замени URL на свой, когда задеплоишь фронтенд (пока можно оставить заглушку)
-        var webAppUrl = "https://your-mini-app-url.com"; 
+        var webAppUrl = "https://recipe-app-beta-self.vercel.app/"; 
 
         var keyboard = new InlineKeyboardMarkup(
             InlineKeyboardButton.WithWebApp("Открыть книгу рецептов 📖", new WebAppInfo { Url = webAppUrl })

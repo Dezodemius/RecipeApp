@@ -32,6 +32,7 @@ public class Program
                     .AllowAnyMethod();
             });
         });
+        builder.Services.AddControllers();
 
         var app = builder.Build();
 

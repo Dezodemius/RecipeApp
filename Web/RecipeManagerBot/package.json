@@ -1,16 +1,14 @@
 {
   "name": "recipemanagerbot",
+  "private": true,
   "version": "1.0.0",
-  "description": "",
-  "main": "config.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs"
+  "dependencies": {
+    "vite": "^5.0.0"
+  }
 }
