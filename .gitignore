@@ -143,3 +143,5 @@ RecipeApp/RecipeApp/wwwroot/uploads/
 RecipeApp/RecipeApp/appsettings.json
 
 RecipeApp/RecipeApp/appsettings.Development.json
+
+Web/RecipeManagerBot/.env
