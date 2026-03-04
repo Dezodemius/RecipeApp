@@ -1,0 +1,157 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кулинарная Книга</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans p-4 mb-20">
+
+<div id="app" class="max-w-md mx-auto">
+    <header class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-black text-orange-500 uppercase tracking-tight">Новый рецепт</h1>
+        <button onclick="tg.close()" class="text-slate-400 text-sm">Отмена</button>
+    </header>
+
+    <section class="bg-white rounded-2xl shadow-sm p-4 mb-4 space-y-4">
+        <input id="title" type="text" placeholder="Название блюда"
+               class="w-full text-lg font-bold border-none focus:ring-0 placeholder-slate-300">
+        <textarea id="description" placeholder="Коротко о рецепте..."
+                  class="w-full text-sm border-none focus:ring-0 placeholder-slate-300 resize-none"></textarea>
+    </section>
+
+    <section class="mb-6">
+        <h3 class="text-xs font-bold uppercase text-slate-400 mb-3 ml-1 tracking-widest">Ингредиенты</h3>
+        <div id="ingredients-list" class="space-y-2"></div>
+        <button onclick="addIngredient()" class="mt-3 w-full py-2 text-sm text-orange-500 font-semibold bg-orange-50 rounded-xl hover:bg-orange-100 transition-colors">
+            + Добавить ингредиент
+        </button>
+    </section>
+
+    <section class="mb-8">
+        <h3 class="text-xs font-bold uppercase text-slate-400 mb-3 ml-1 tracking-widest">Шаги приготовления</h3>
+        <div id="steps-list" class="space-y-4"></div>
+        <button onclick="addStep()" class="mt-4 w-full py-3 border-2 border-dashed border-slate-200 rounded-2xl text-slate-400 font-medium hover:border-orange-300 hover:text-orange-500 transition-all">
+            + Добавить следующий шаг
+        </button>
+    </section>
+
+    <div class="fixed bottom-4 left-4 right-4 max-w-md mx-auto">
+        <button onclick="saveRecipe()" id="save-btn" class="w-full bg-orange-500 text-white font-bold py-4 rounded-2xl shadow-lg shadow-orange-200 active:scale-95 transition-transform">
+            СОХРАНИТЬ РЕЦЕПТ
+        </button>
+    </div>
+</div>
+
+<script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+    tg.MainButton.hide(); // Используем свою кнопку для стиля
+
+    // !!! ЗАМЕНИ ЭТОТ URL НА СВОЙ ПОСЛЕ ДЕПЛОЯ БЭКЕНДА !!!
+    const API_BASE_URL = "https://your-backend-on-railway.app";
+
+    function addIngredient() {
+        const container = document.getElementById('ingredients-list');
+        const div = document.createElement('div');
+        div.className = "flex gap-2 animate-in fade-in duration-300";
+        div.innerHTML = `
+                <input type="text" placeholder="Продукт" class="flex-1 bg-white border-none rounded-xl p-3 text-sm shadow-sm">
+                <input type="text" placeholder="Кол-во" class="w-24 bg-white border-none rounded-xl p-3 text-sm shadow-sm text-center">
+            `;
+        container.appendChild(div);
+    }
+
+    function addStep() {
+        const container = document.getElementById('steps-list');
+        const stepNum = container.children.length + 1;
+        const div = document.createElement('div');
+        div.className = "bg-white p-4 rounded-2xl shadow-sm space-y-3 relative";
+        div.innerHTML = `
+                <span class="absolute -left-2 top-4 bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded-md shadow-sm">${stepNum}</span>
+                <textarea placeholder="Опишите процесс..." class="w-full text-sm border-none focus:ring-0 p-0 resize-none min-h-[60px]"></textarea>
+                <div class="flex items-center gap-4">
+                    <label class="cursor-pointer bg-slate-100 p-2 rounded-lg hover:bg-slate-200 transition-colors">
+                        <span class="text-lg">📷</span>
+                        <input type="file" multiple accept="image/*" onchange="uploadImages(this, ${stepNum})" class="hidden">
+                    </label>
+                    <div id="images-step-${stepNum}" class="flex gap-2 overflow-x-auto py-1"></div>
+                </div>
+            `;
+        container.appendChild(div);
+    }
+
+    async function uploadImages(input, stepNum) {
+        const preview = document.getElementById(`images-step-${stepNum}`);
+        const files = input.files;
+
+        for (let file of files) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/upload`, { method: 'POST', body: formData });
+                const data = await response.json();
+
+                const imgWrapper = document.createElement('div');
+                imgWrapper.className = "relative flex-shrink-0";
+                imgWrapper.innerHTML = `
+                        <img src="${API_BASE_URL}${data.url}" class="w-14 h-14 object-cover rounded-lg shadow-inner">
+                        <div class="absolute inset-0 border border-black/5 rounded-lg"></div>
+                    `;
+                imgWrapper.dataset.url = data.url;
+                preview.appendChild(imgWrapper);
+            } catch (e) {
+                tg.showAlert("Ошибка при загрузке фото!");
+            }
+        }
+    }
+
+    async function saveRecipe() {
+        const btn = document.getElementById('save-btn');
+        btn.disabled = true;
+        btn.innerText = "СОХРАНЕНИЕ...";
+
+        const recipeData = {
+            title: document.getElementById('title').value,
+            description: document.getElementById('description').value,
+            ownerId: tg.initDataUnsafe.user?.id || 0,
+            ingredients: Array.from(document.getElementById('ingredients-list').children).map(row => ({
+                name: row.children[0].value,
+                amount: row.children[1].value
+            })).filter(i => i.name),
+            steps: Array.from(document.getElementById('steps-list').children).map((row, idx) => ({
+                stepNumber: idx + 1,
+                instruction: row.querySelector('textarea').value,
+                images: Array.from(row.querySelectorAll('[data-url]')).map(el => ({ url: el.dataset.url }))
+            }))
+        };
+
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/recipes`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(recipeData)
+            });
+
+            if (res.ok) {
+                tg.HapticFeedback.notificationOccurred('success');
+                tg.showAlert("Рецепт успешно добавлен!");
+                tg.close();
+            }
+        } catch (e) {
+            tg.showAlert("Не удалось связаться с сервером.");
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "СОХРАНИТЬ РЕЦЕПТ";
+        }
+    }
+
+    // Инициализация полей
+    addIngredient();
+    addStep();
+</script>
+</body>
+</html>
