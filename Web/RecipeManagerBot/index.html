@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -50,8 +50,10 @@
     tg.expand();
     tg.MainButton.hide(); // Используем свою кнопку для стиля
 
-    // !!! ЗАМЕНИ ЭТОТ URL НА СВОЙ ПОСЛЕ ДЕПЛОЯ БЭКЕНДА !!!
-    const API_BASE_URL = "https://your-backend-on-railway.app";
+    // Пытаемся получить адрес из переменной, которую Vercel может подставить (если используем сборщики)
+    // Или, в нашем случае для простого HTML, мы можем оставить заглушку, 
+    // но лучше всего использовать подход с относительным путем или конфигом.
+    const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";;
 
     function addIngredient() {
         const container = document.getElementById('ingredients-list');
