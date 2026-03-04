@@ -48,11 +48,9 @@
 <script type="module">
     const tg = window.Telegram.WebApp;
     tg.expand();
-    tg.MainButton.hide(); // Используем свою кнопку для стиля
+    tg.MainButton.hide();
 
-    // Пытаемся получить адрес из переменной, которую Vercel может подставить (если используем сборщики)
-    // Или, в нашем случае для простого HTML, мы можем оставить заглушку, 
-    // но лучше всего использовать подход с относительным путем или конфигом.
+    // Vite подставит значение из настроек Vercel
     const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
     function addIngredient() {
@@ -60,9 +58,9 @@
         const div = document.createElement('div');
         div.className = "flex gap-2 animate-in fade-in duration-300";
         div.innerHTML = `
-                <input type="text" placeholder="Продукт" class="flex-1 bg-white border-none rounded-xl p-3 text-sm shadow-sm">
-                <input type="text" placeholder="Кол-во" class="w-24 bg-white border-none rounded-xl p-3 text-sm shadow-sm text-center">
-            `;
+            <input type="text" placeholder="Продукт" class="flex-1 bg-white border-none rounded-xl p-3 text-sm shadow-sm">
+            <input type="text" placeholder="Кол-во" class="w-24 bg-white border-none rounded-xl p-3 text-sm shadow-sm text-center">
+        `;
         container.appendChild(div);
     }
 
@@ -72,16 +70,16 @@
         const div = document.createElement('div');
         div.className = "bg-white p-4 rounded-2xl shadow-sm space-y-3 relative";
         div.innerHTML = `
-                <span class="absolute -left-2 top-4 bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded-md shadow-sm">${stepNum}</span>
-                <textarea placeholder="Опишите процесс..." class="w-full text-sm border-none focus:ring-0 p-0 resize-none min-h-[60px]"></textarea>
-                <div class="flex items-center gap-4">
-                    <label class="cursor-pointer bg-slate-100 p-2 rounded-lg hover:bg-slate-200 transition-colors">
-                        <span class="text-lg">📷</span>
-                        <input type="file" multiple accept="image/*" onchange="uploadImages(this, ${stepNum})" class="hidden">
-                    </label>
-                    <div id="images-step-${stepNum}" class="flex gap-2 overflow-x-auto py-1"></div>
-                </div>
-            `;
+            <span class="absolute -left-2 top-4 bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded-md shadow-sm">${stepNum}</span>
+            <textarea placeholder="Опишите процесс..." class="w-full text-sm border-none focus:ring-0 p-0 resize-none min-h-[60px]"></textarea>
+            <div class="flex items-center gap-4">
+                <label class="cursor-pointer bg-slate-100 p-2 rounded-lg hover:bg-slate-200 transition-colors">
+                    <span class="text-lg">📷</span>
+                    <input type="file" multiple accept="image/*" onchange="uploadImages(this, ${stepNum})" class="hidden">
+                </label>
+                <div id="images-step-${stepNum}" class="flex gap-2 overflow-x-auto py-1"></div>
+            </div>
+        `;
         container.appendChild(div);
     }
 
@@ -100,12 +98,13 @@
                 const imgWrapper = document.createElement('div');
                 imgWrapper.className = "relative flex-shrink-0";
                 imgWrapper.innerHTML = `
-                        <img src="${API_BASE_URL}${data.url}" class="w-14 h-14 object-cover rounded-lg shadow-inner">
-                        <div class="absolute inset-0 border border-black/5 rounded-lg"></div>
-                    `;
+                    <img src="${API_BASE_URL}${data.url}" class="w-14 h-14 object-cover rounded-lg shadow-inner">
+                    <div class="absolute inset-0 border border-black/5 rounded-lg"></div>
+                `;
                 imgWrapper.dataset.url = data.url;
                 preview.appendChild(imgWrapper);
             } catch (e) {
+                console.error(e);
                 tg.showAlert("Ошибка при загрузке фото!");
             }
         }
@@ -113,11 +112,18 @@
 
     async function saveRecipe() {
         const btn = document.getElementById('save-btn');
+        const title = document.getElementById('title').value;
+
+        if (!title) {
+            tg.showAlert("Введите название рецепта!");
+            return;
+        }
+
         btn.disabled = true;
         btn.innerText = "СОХРАНЕНИЕ...";
 
         const recipeData = {
-            title: document.getElementById('title').value,
+            title: title,
             description: document.getElementById('description').value,
             ownerId: tg.initDataUnsafe.user?.id || 0,
             ingredients: Array.from(document.getElementById('ingredients-list').children).map(row => ({
@@ -142,16 +148,26 @@
                 tg.HapticFeedback.notificationOccurred('success');
                 tg.showAlert("Рецепт успешно добавлен!");
                 tg.close();
+            } else {
+                tg.showAlert("Ошибка сервера при сохранении.");
             }
         } catch (e) {
-            tg.showAlert("Не удалось связаться с сервером.");
+            console.error(e);
+            tg.showAlert("Не удалось связаться с бэкендом. Проверьте адрес и CORS.");
         } finally {
             btn.disabled = false;
             btn.innerText = "СОХРАНИТЬ РЕЦЕПТ";
         }
     }
 
-    // Инициализация полей
+    // Экспортируем функции в глобальную область, чтобы работали onclick в HTML
+    window.addIngredient = addIngredient;
+    window.addStep = addStep;
+    window.saveRecipe = saveRecipe;
+    window.uploadImages = uploadImages;
+    window.tg = tg;
+
+    // Инициализация
     addIngredient();
     addStep();
 </script>
