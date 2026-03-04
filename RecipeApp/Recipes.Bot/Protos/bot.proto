@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+option csharp_namespace = "Recipe";
+
+service Recipe {
+  rpc Ping (google.protobuf.Empty) returns (PingReply);
+}
+
+message PingReply {
+  string message = 1;
+}
